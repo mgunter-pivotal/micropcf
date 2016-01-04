@@ -60,7 +60,7 @@ See cf documentation for information on [deploying apps](http://docs.cloudfoundr
 
 ## Troubleshooting
 
-See our [troubleshooting](TROUBLESHOOTING) page.
+See our [troubleshooting](TROUBLESHOOTING.md) page.
 
 ## Contributing
 
