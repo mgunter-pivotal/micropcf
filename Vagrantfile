@@ -39,8 +39,7 @@ Vagrant.configure("2") do |config|
     aws.secret_access_key = ENV["AWS_SECRET_ACCESS_KEY"]
     aws.keypair_name = ENV["AWS_SSH_PRIVATE_KEY_NAME"]
     aws.region = ENV["AWS_REGION"] || 'us-east-1'
-    aws.instance_type = "m4.large"
-    aws.ebs_optimized = true
+    aws.instance_type = "m3.large"
     aws.tags = { "Name" => (ENV["AWS_INSTANCE_NAME"] || "micropcf") }
     aws.ami = ""
 

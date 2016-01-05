@@ -6,10 +6,10 @@
     },
     "builders": [
         {
-            "type": "amazon-ebs",
+            "type": "amazon-instance",
             "region": "us-east-1",
-            "source_ami": "ami-5c207736",
-            "instance_type": "m4.large",
+            "source_ami": "ami-6726710d",
+            "instance_type": "m3.large",
             "ami_name": "micropcf-{{user `distro`}}-{{isotime \"2006-01-02_1504\"}}",
             "ami_groups": ["all"],
             "ami_regions": [
@@ -17,19 +17,23 @@
                 "eu-central-1", "eu-west-1", "us-west-1", "us-west-2"
             ],
             "ami_block_device_mappings": [{
-              "device_name": "/dev/sda1",
-              "volume_type": "gp2",
-              "volume_size": 30,
-              "delete_on_termination": true
+                "device_name": "/dev/sda1",
+                "volume_type": "gp2",
+                "volume_size": 40,
+                "virtual_name": "ephemeral0"
             }],
             "launch_block_device_mappings": [{
-              "device_name": "/dev/sda1",
-              "volume_type": "gp2",
-              "volume_size": 30,
-              "delete_on_termination": true
+                "device_name": "/dev/sda1",
+                "volume_type": "gp2",
+                "volume_size": 40,
+                "virtual_name": "ephemeral0"
             }],
             "ssh_username": "ubuntu",
-            "tags": {"Name": "{{user `version`}}"}
+            "tags": {"Name": "{{user `version`}}"},
+            "account_id": "7914-8387-1306",
+            "s3_bucket": "micropcf",
+            "x509_cert_path": "/Users/pivotal/Downloads/cert-ZOPJ7AAYWXNSKZC62D7KEYDTJWSS7F4S.pem",
+            "x509_key_path": "/Users/pivotal/Downloads/pk-ZOPJ7AAYWXNSKZC62D7KEYDTJWSS7F4S.pem"
         },
         {
             "type": "vmware-iso",
@@ -124,7 +128,7 @@
         },
         {
             "type": "shell",
-            "only": ["amazon-ebs"],
+            "only": ["amazon-instance"],
             "execute_command": "{{ .Vars }} sudo -E sh '{{ .Path }}'",
             "inline": [
                 "apt-get -y install linux-image-extra-`uname -r`"
@@ -175,7 +179,7 @@
             "execute_command": "{{ .Vars }} sudo -E sh '{{ .Path }}'",
             "remote_path": "/home/vagrant/cleanup.sh",
             "override": {
-                "amazon-ebs": { "remote_path": "/home/ubuntu/cleanup.sh" }
+                "amazon-instance": { "remote_path": "/home/ubuntu/cleanup.sh" }
             },
             "inline": [
                 "chmod 1777 /tmp",
