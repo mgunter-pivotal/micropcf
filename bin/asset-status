@@ -18,7 +18,7 @@ function check() {
   return 0
 }
 
-check $micropcf_dir/images/bosh/src/github.com/sclevine/bosh-provisioner
+check $micropcf_dir/images/bosh/src/github.com/cppforlife/bosh-provisioner
 for release in $@; do
   check $micropcf_dir/images/releases/${release}-release
 done
