@@ -27,8 +27,8 @@ EOF
 public_networks_without_bosh='[ { "destination": "0.0.0.0-9.255.255.255", "protocol": "all" }, { "destination": "11.0.0.0-52.71.122.24", "protocol": "all" }, { "destination": "52.71.122.26-169.253.255.255", "protocol": "all" }, { "destination": "169.255.0.0-172.15.255.255", "protocol": "all" }, { "destination": "172.32.0.0-192.167.255.255", "protocol": "all" }, { "destination": "192.169.0.0-255.255.255.255", "protocol": "all" } ]'
 public_networks='[ { "destination": "0.0.0.0-9.255.255.255", "protocol": "all" }, { "destination": "11.0.0.0-169.253.255.255", "protocol": "all" }, { "destination": "169.255.0.0-172.15.255.255", "protocol": "all" }, { "destination": "172.32.0.0-192.167.255.255", "protocol": "all" }, { "destination": "192.169.0.0-255.255.255.255", "protocol": "all" } ]'
 
-diego_release_dir=$(cd `dirname $0` && cd ../images/releases/diego-release && pwd)
-micropcf_dir=$(cd `dirname $0` && cd ../ && pwd)
+micropcf_dir=$(cd `dirname $0` && cd .. && pwd)
+diego_release_dir=$micropcf_dir/images/releases/diego-release
 
 pushd $micropcf_dir/test/src/github.com/cloudfoundry-incubator/diego-acceptance-tests >/dev/null
   cf api api.$domain --skip-ssl-validation
