@@ -41,5 +41,5 @@ pushd $micropcf_dir/test/src/github.com/cloudfoundry-incubator/diego-acceptance-
 
   export GOPATH=$micropcf_dir/test:$diego_release_dir
   export PATH=$GOPATH/bin:$PATH
-  ./bin/test --skip='DEA Compatibility'
+  ./bin/test --skip='DEA Compatibility|scp'
 popd >/dev/null
