@@ -4,7 +4,7 @@ set -e
 
 if [[ -z $1 ]]; then
   echo "Usage:"
-  echo -e "\t$0 micropcf_domain"
+  echo -e "\t$0 domain"
   exit 1
 fi
 
