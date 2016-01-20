@@ -411,6 +411,7 @@ properties:
   login:
     protocol: http
   router:
+    enable_routing_api: true
     debug_addr: 0.0.0.0:17003
     enable_ssl: true
     ssl_cert: |
