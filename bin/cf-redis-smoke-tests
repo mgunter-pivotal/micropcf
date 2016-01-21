@@ -1,0 +1,35 @@
+#!/bin/bash
+
+set -e
+
+if [[ -z $1 ]]; then
+  echo "Usage:"
+  echo -e "\t$0 domain"
+  exit 1
+fi
+
+domain=$1
+
+export CONFIG_PATH=`mktemp -t config.XXXXXXXX`
+cat <<EOF >$CONFIG_PATH
+{
+  "service_name": "p-redis",
+  "plan_names": [
+    "shared-vm"
+  ],
+  "admin_password": "admin",
+  "admin_user": "admin",
+  "api": "api.$domain",
+  "apps_domain": "$domain",
+  "create_permissive_security_group": true,
+  "skip_ssl_validation": true
+}
+EOF
+
+cf_redis_release_dir=$(cd `dirname $0` && cd ../images/releases/cf-redis-release && pwd)
+
+pushd $cf_redis_release_dir/src/cf-redis-smoke-tests >/dev/null
+  export GOPATH=$PWD/Godeps/_workspace
+  export PATH=$GOPATH/bin:$PATH
+  ./bin/test
+popd >/dev/null
