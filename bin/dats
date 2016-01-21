@@ -19,7 +19,8 @@ cat <<EOF >$CONFIG
   "apps_domain": "$domain",
   "cf_push_timeout": 1200,
   "long_curl_timeout": 1200,
-  "skip_ssl_validation": true
+  "skip_ssl_validation": true,
+  "skip_ssh_host_validation": true
 }
 EOF
 
@@ -29,5 +30,5 @@ diego_release_dir=$micropcf_dir/images/releases/diego-release
 pushd $micropcf_dir/test/src/github.com/cloudfoundry-incubator/diego-acceptance-tests >/dev/null
   export GOPATH=$micropcf_dir/test:$diego_release_dir
   export PATH=$GOPATH/bin:$PATH
-  ./bin/test --skip='DEA Compatibility|Security Groups|scp' security_groups
+  ./bin/test --skip='DEA Compatibility|Security Groups|scp|sftp'
 popd >/dev/null
