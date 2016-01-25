@@ -27,9 +27,9 @@ cat <<EOF >$CONFIG
 }
 EOF
 
-micropcf_dir=$(cd `dirname $0` && cd ../ && pwd)
+cf_release_dir=$(cd `dirname $0` && cd ../images/releases/cf-release && pwd)
 
-pushd $micropcf_dir/test/src/github.com/cloudfoundry/cf-acceptance-tests >/dev/null
-  export GOPATH=$micropcf_dir/test:$PWD/Godeps/_workspace
+pushd $cf_release_dir/src/github.com/cloudfoundry/cf-acceptance-tests >/dev/null
+  export GOPATH=$PWD/Godeps/_workspace:$cf_release_dir
   ./bin/test_default --skip='{NO_DIEGO_SUPPORT}|SSO Lifecycle' operator routing services v3
 popd >/dev/null
