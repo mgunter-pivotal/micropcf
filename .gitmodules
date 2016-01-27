@@ -22,3 +22,6 @@
 [submodule "test/src/github.com/cloudfoundry-incubator/diego-acceptance-tests"]
 	path = test/src/github.com/cloudfoundry-incubator/diego-acceptance-tests
 	url = https://github.com/mdelillo/diego-acceptance-tests
+[submodule "images/releases/cf-mysql-release"]
+	path = images/releases/cf-mysql-release
+	url = https://github.com/ekcasey/cf-mysql-release.git
