@@ -3,10 +3,13 @@
 <<: (( merge ))
 
 releases:
-- <<: (( merge ))
+- name: cf-mysql
+  version: 0
+  url: file:///opt/bosh-provisioner/assets/releases/cf-mysql-0.tgz
 - name: cf-redis
   version: 0
   url: file:///opt/bosh-provisioner/assets/releases/cf-redis-0.tgz
+- <<: (( merge ))
 
 jobs:
 - <<: (( merge ))
@@ -14,33 +17,74 @@ jobs:
   <<: (( merge ))
   templates:
   - <<: (( merge ))
+
   - name: syslog-configurator
     release: cf-redis
   - name: cf-redis-broker
     release: cf-redis
-  - name: broker-registrar
-    release: cf-redis
+
+  - name: cf-mysql-broker
+    release: cf-mysql
+  - name: mysql
+    release: cf-mysql
 
 properties:
   <<: (( merge ))
+  network_name: (( networks.[0].name ))
 
   cf:
-    api_url: http://api.local.micropcf.io
+    <<: (( merge ))
+    api_url: http://localhost:9022
     admin_username: admin
     admin_password: admin
     apps_domain: (( app_domains.[0] ))
+    skip_ssl_validation: true
     nats:
+      <<: (( merge ))
       host: (( properties.nats.machines.[0] ))
       port: (( properties.nats.port ))
       username: (( properties.nats.user ))
       password: (( properties.nats.password ))
 
-  broker:
-    name: redis
-    protocol: http
-    host: localhost:10005
-    username: admin
-    password: admin
+  cf_mysql:
+    host: placeholder-ip
+    external_host: mysql.local.micropcf.io
+    broker:
+      auth_username: admin
+      auth_password: admin
+      cookie_secret: 94046872-2602-4ca6-8d07-8b0da9762477
+      services:
+      - name: p-mysql
+        plan_updateable: true
+        id: 44b26033-1f54-4087-b7bc-da9652c2a539
+        description: MySQL databases on demand
+        tags: [mysql]
+        metadata: {}
+        dashboard_client:
+          id: p-mysql
+          secret: p-mysql-secret
+        plans:
+        - name: 512mb
+          id: ab08f1bc-e6fc-4b56-a767-ee0fea6e3f20
+          description: MicroPCF MySQL Server
+          max_storage_mb: 512
+          max_user_connections: 10
+        - name: 1gb
+          id: 11d0aa36-dcec-4021-85f5-ea4d9a5c8342
+          description: MicroPCF MySQL Server
+          max_storage_mb: 1024
+          max_user_connections: 20
+      nginx:
+        port: 19284
+    mysql:
+      cluster_ips: [placeholder-ip]
+      admin_password: admin
+      roadmin_password: admin
+      persistent_disk: 10000
+      database_startup_timeout: 120
+      bootstrap_endpoint:
+        username: admin
+        password: admin
 
   redis:
     maxmemory: 262144000
@@ -50,3 +94,5 @@ properties:
     broker:
       network: (( networks.[0].name ))
       service_instance_limit: 3
+      nginx:
+        port: 19283

@@ -1,5 +1,38 @@
 #!/bin/bash
 
-set -e
+set -eu
 
-/var/vcap/jobs/broker-registrar/bin/run
+domain=$1
+
+CF_API_URL="api.$domain"
+CF_ADMIN_USERNAME='admin'
+CF_ADMIN_PASSWORD='admin'
+
+BROKER_USERNAME='admin'
+BROKER_PASSWORD='admin'
+
+function updateServiceBroker() {
+  echo "Service broker already exists - updating broker"
+  cf update-service-broker ${BROKER_NAME} ${BROKER_USERNAME} ${BROKER_PASSWORD} ${BROKER_URL}
+}
+
+function createServiceBroker(){
+  echo "Service broker does not exist - creating broker"
+  cf create-service-broker ${BROKER_NAME} ${BROKER_USERNAME} ${BROKER_PASSWORD} ${BROKER_URL}
+}
+
+cf api ${CF_API_URL} --skip-ssl-validation
+cf auth ${CF_ADMIN_USERNAME} ${CF_ADMIN_PASSWORD}
+
+BROKER_NAME='p-mysql'
+BROKER_URL="http://mysql.$domain:19284"
+
+createServiceBroker || updateServiceBroker
+cf enable-service-access ${BROKER_NAME}
+
+BROKER_NAME='redis'
+BROKER_SERVICE_NAME='p-redis'
+BROKER_URL="http://redis.$domain:19283"
+
+createServiceBroker || updateServiceBroker
+cf enable-service-access ${BROKER_SERVICE_NAME}
