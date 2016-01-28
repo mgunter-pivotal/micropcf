@@ -4,7 +4,7 @@ set -e
 
 cf_release_tag=$1
 
-release_dir=$(cd `dirname $0` && cd ../images/releases && pwd)
+release_dir=$(cd `dirname $0` && cd ../releases && pwd)
 
 pushd $release_dir >/dev/null
   pushd cf-release >/dev/null

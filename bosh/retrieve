@@ -10,7 +10,7 @@ fi
 
 
 assets_dir=$(mkdir -p "$1" && cd "$1" && pwd)
-micropcf_dir=$(cd `dirname $0` && cd ../.. && pwd)
+micropcf_dir=$(cd `dirname $0` && cd .. && pwd)
 releases=${@:2}
 
 if ! $micropcf_dir/bin/asset-absence $releases && ! $micropcf_dir/bin/asset-status $releases; then

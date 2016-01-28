@@ -20,7 +20,7 @@ if aws s3api head-object --bucket micropcf --key asset-cache/${signature}.tar >/
 fi
 
 tmp_dir=$(mktemp -dt micropcf-assets.XXXXXXXX)
-$micropcf_dir/images/bosh/build $tmp_dir/assets $@
+$micropcf_dir/bosh/build $tmp_dir/assets $@
 
 tar -C $tmp_dir/assets -cf $tmp_dir/assets.tar .
 

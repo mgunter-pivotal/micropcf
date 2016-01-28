@@ -26,10 +26,8 @@ cat <<EOF >$CONFIG_PATH
 }
 EOF
 
-cf_redis_release_dir=$(cd `dirname $0` && cd ../images/releases/cf-redis-release && pwd)
+cf_redis_release_dir=$(cd `dirname $0` && cd ../releases/cf-redis-release && pwd)
 
 pushd $cf_redis_release_dir/src/cf-redis-smoke-tests >/dev/null
-  export GOPATH=$PWD/Godeps/_workspace
-  export PATH=$GOPATH/bin:$PATH
-  ./bin/test
+  GOPATH=$PWD/Godeps/_workspace PATH=$GOPATH/bin:$PATH ./bin/test
 popd >/dev/null

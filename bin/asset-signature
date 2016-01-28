@@ -9,11 +9,11 @@ if [[ $# -eq 0 ]]; then
 fi
 
 micropcf_dir=$(cd `dirname $0` && cd .. && pwd)
-bosh_provisioner_dir=$micropcf_dir/images/bosh/src/github.com/cppforlife/bosh-provisioner
+bosh_provisioner_dir=$micropcf_dir/bosh/src/github.com/cppforlife/bosh-provisioner
 
 versions="bosh-provisioner $(git -C "$micropcf_dir" submodule status "$bosh_provisioner_dir" | cut -b 2-41)\n"
 for release in $@; do
-  release_dir=$micropcf_dir/images/releases/${release}-release
+  release_dir=$micropcf_dir/releases/${release}-release
   release_sha=$(git -C "$micropcf_dir" submodule status "$release_dir" | cut -b 2-41)
   versions="${versions}${release}-release ${release_sha}\n"
 done
