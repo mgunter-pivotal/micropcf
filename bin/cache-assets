@@ -4,7 +4,7 @@ set -e
 
 micropcf_dir=$(cd `dirname $0` && cd .. && pwd)
 
-if ! $micropcf_dir/bin/asset-status $@; then
+if ! $micropcf_dir/bin/assets-clean $@; then
   >&2 echo "Asset submodules are dirty."
   exit 1
 fi
