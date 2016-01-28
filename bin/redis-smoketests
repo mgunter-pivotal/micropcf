@@ -26,8 +26,8 @@ cat <<EOF >$CONFIG_PATH
 }
 EOF
 
-cf_redis_release_dir=$(cd `dirname $0` && cd ../releases/cf-redis-release && pwd)
+micropcf_dir=$(cd `dirname $0` && cd .. && pwd)
 
-pushd $cf_redis_release_dir/src/cf-redis-smoke-tests >/dev/null
+pushd "$micropcf_dir/test/src/github.com/mdelillo/cf-redis-smoke-tests" >/dev/null
   GOPATH=$PWD/Godeps/_workspace PATH=$GOPATH/bin:$PATH ./bin/test
 popd >/dev/null

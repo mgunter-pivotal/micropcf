@@ -31,7 +31,7 @@ EOF
 micropcf_dir=$(cd `dirname $0` && cd .. && pwd)
 
 pushd "$micropcf_dir/test/src/github.com/cloudfoundry/cf-acceptance-tests" >/dev/null
-  GOPATH=/test ./bin/test \
+  GOPATH=$micropcf_dir/test ./bin/test \
     --skip='scp|sftp|NO_DIEGO_SUPPORT|insufficient resources|SSO Lifecycle' \
     --slowSpecThreshold=480 \
     ${@:2} \
