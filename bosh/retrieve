@@ -13,7 +13,7 @@ assets_dir=$(mkdir -p "$1" && cd "$1" && pwd)
 micropcf_dir=$(cd `dirname $0` && cd .. && pwd)
 releases=${@:2}
 
-if "$micropcf_dir/bin/assets-present" $releases && ! "$micropcf_dir/bin/asset-clean" $releases; then
+if "$micropcf_dir/bin/assets-present" $releases && ! "$micropcf_dir/bin/assets-clean" $releases; then
   >&2 echo "Assets are available but dirty."
   exit 1
 fi
