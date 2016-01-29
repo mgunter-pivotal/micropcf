@@ -29,5 +29,7 @@ EOF
 micropcf_dir=$(cd `dirname $0` && cd .. && pwd)
 
 pushd "$micropcf_dir/test/src/github.com/mdelillo/cf-redis-smoke-tests" >/dev/null
-  GOPATH=$PWD/Godeps/_workspace PATH=$GOPATH/bin:$PATH ./bin/test
+  export GOPATH=$micropcf_dir/test:$PWD/Godeps/_workspace
+  export PATH=$micropcf_dir/test/bin:$PATH
+  ./bin/test
 popd >/dev/null

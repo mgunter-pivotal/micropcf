@@ -1,0 +1,50 @@
+#!/bin/bash
+
+set -e
+
+if [[ -z $1 ]]; then
+  echo "Usage:"
+  echo -e "\t$0 domain"
+  exit 1
+fi
+
+domain=$1
+
+export CONFIG=`mktemp -t config.XXXXXXXX`
+cat <<EOF >$CONFIG
+{
+  "broker_host": "mysql.$domain:19284",
+  "broker_protocol": "http",
+  "service_name": "p-mysql",
+  "plans": [
+    {
+      "plan_name": "512mb",
+      "max_storage_mb": 512,
+      "max_user_connections": 10
+    },
+    {
+      "plan_name": "1gb",
+      "max_storage_mb": 1024,
+      "max_user_connections": 20
+    }
+  ],
+  "proxy":{
+    "dashboard_urls": ["http://mysql.$domain:19284/v2/catalog"],
+    "api_username": "admin",
+    "api_password": "admin",
+    "skip_ssl_validation": true
+  },
+  "api": "api.$domain",
+  "admin_user": "admin",
+  "admin_password": "admin",
+  "apps_domain": "$domain",
+  "skip_ssl_validation": true
+}
+EOF
+
+micropcf_dir=$(cd `dirname $0` && cd .. && pwd)
+
+pushd "$micropcf_dir/test/src/github.com/mdelillo/cf-mysql-acceptance-tests" >/dev/null
+  export GOPATH=$micropcf_dir/test:$micropcf_dir/releases/cf-mysql-release
+  ./bin/test-acceptance -nodes 1
+popd >/dev/null
