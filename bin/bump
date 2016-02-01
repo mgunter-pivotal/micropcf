@@ -50,6 +50,9 @@ pushd $release_dir >/dev/null
     git clean -dffx
   popd >/dev/null
 
+  cats_sha=$(git -C cf-release/src/github.com/cloudfoundry/cf-acceptance-tests rev-parse HEAD)
+  git -C $micropcf_dir/test/src/github.com/cloudfoundry/cf-acceptance-tests checkout $cats_sha
+
   echo "cf-release: v$diego_release_version"
   echo "diego-release: v$diego_release_version"
   echo "garden-linux-release: v$garden_linux_release_version"
