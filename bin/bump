@@ -4,6 +4,7 @@ set -e
 
 cf_release_tag=$1
 
+micropcf_dir=$(cd `dirname $0` && cd .. && pwd)
 release_dir=$(cd `dirname $0` && cd ../releases && pwd)
 
 pushd $release_dir >/dev/null
@@ -53,4 +54,6 @@ pushd $release_dir >/dev/null
   echo "diego-release: v$diego_release_version"
   echo "garden-linux-release: v$garden_linux_release_version"
   echo "etcd-release: v$etcd_release_version"
+
+  $micropcf_dir/bin/find-package-conflicts
 popd

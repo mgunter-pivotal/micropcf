@@ -1,0 +1,57 @@
+#!/bin/bash
+
+set -e
+
+function dependencies_for_package {
+  package=$1
+  release=$2
+  dependencies=$(cat $micropcf_dir/releases/$release-release/packages/$package/spec | $micropcf_dir/bin/yaml-to-json | jq '.dependencies[]?' | tr -d '"' | sort)
+
+  if [[ -n $dependencies ]]; then
+    for dependency in ${dependencies[@]}; do 
+      dependencies+=($(dependencies_for_package $dependency $release))
+    done
+  fi
+  echo ${dependencies[@]}
+}
+
+temp_dir=$(mktemp -d -t find-duplicate-packages)
+function remove_temp_dir {
+  rm -r $temp_dir
+}
+trap remove_temp_dir EXIT
+
+micropcf_dir=$(cd `dirname $0` && cd .. && pwd)
+merged_manifest=$(spiff merge $micropcf_dir/images/micropcf/manifest.yml $micropcf_dir/images/manifest.yml)
+json_manifest=$(echo "$merged_manifest" | $micropcf_dir/bin/yaml-to-json)
+releases=$(echo "$json_manifest" | jq '.releases[].name' | tr -d '"' | sort)
+packages=()
+
+pushd $temp_dir > /dev/null
+  for release in $releases; do
+    release_packages=()
+    jobs=$(echo "$json_manifest" | jq ".jobs[0].templates[] | select(.release == \"$release\").name" | tr -d '"')
+    for job in $jobs; do
+      job_packages=$(cat $micropcf_dir/releases/$release-release/jobs/$job/spec | $micropcf_dir/bin/yaml-to-json | jq '.packages[]?' | tr -d '"' | sort)
+      packages+=($job_packages)
+      release_packages+=($job_packages)
+    done
+
+    for package in ${release_packages[@]}; do
+      dependencies=$(dependencies_for_package $package $release)
+      packages+=($dependencies)
+      release_packages+=($dependencies)
+    done
+
+    echo ${release_packages[@]} | tr ' ' "\n" >> $release
+    sort -u -o $release $release
+  done
+
+  packages=$(echo ${packages[@]} | tr ' ' "\n" | sort -u)
+  for package in $packages; do
+    if [[ $(grep -o "^$package\$" * | wc -l) -gt 1 ]]; then
+      conflicting_releases=$(grep -l "^$package\$" * | tr "\n" ' ')
+      echo "$package conflicts in $conflicting_releases"
+    fi
+  done
+popd >/dev/null

@@ -1,0 +1,4 @@
+#!/bin/bash
+
+yaml=`cat`
+echo "$yaml" | ruby -e 'require "yaml"; require "json"; puts JSON.dump(YAML.load(STDIN.read))'
