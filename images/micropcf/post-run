@@ -36,3 +36,10 @@ BROKER_URL="http://redis.$domain:19283"
 
 createServiceBroker || updateServiceBroker
 cf enable-service-access ${BROKER_SERVICE_NAME}
+
+BROKER_NAME='rabbitmq'
+BROKER_SERVICE_NAME='p-rabbitmq'
+BROKER_URL="http://rabbitmq.$domain:15672"
+
+createServiceBroker || updateServiceBroker
+cf enable-service-access ${BROKER_SERVICE_NAME}
