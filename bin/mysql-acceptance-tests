@@ -46,6 +46,6 @@ micropcf_dir=$(cd `dirname $0` && cd .. && pwd)
 
 pushd "$micropcf_dir/test/src/github.com/mdelillo/cf-mysql-acceptance-tests" >/dev/null
   export GOPATH=$micropcf_dir/test:$micropcf_dir/releases/cf-mysql-release
-  export PATH=$micropcf_dir/test/bin:$PATH
+  export PATH=$micropcf_dir/test/bin:$micropcf_dir/releases/cf-mysql-release/bin:$PATH
   ./bin/test-acceptance -nodes 1
 popd >/dev/null
