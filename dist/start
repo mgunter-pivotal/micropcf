@@ -59,10 +59,12 @@ if [[ -f $vmware_path ]]; then
   vmware_version=$("$vmware_path" -v 2>&1 |grep -o "[0-9]\+\.[0-9]\+\.[0-9]\+")
 fi
 
-if [[ $(semver_greater_or_equal "$virtualbox_version" "$minimum_virtualbox_version") -eq 0 ]]; then
-  exit 0
-elif [[ $(semver_greater_or_equal "$vmware_version" "$minimum_vmware_version") -eq 0 ]]; then
-  exit 0
+if [[ $(semver_greater_or_equal "$vmware_version" "$minimum_vmware_version") -eq 0 ]]; then
+  echo "Starting micropcf using VMWare Fusion..."
+  vagrant up --provider=vmware_fusion
+elif [[ $(semver_greater_or_equal "$virtualbox_version" "$minimum_virtualbox_version") -eq 0 ]]; then
+  echo "Starting micropcf using Virtualbox..."
+  vagrant up --provider=virtualbox
 else
   echo "You must have either Virtualbox >= $minimum_virtualbox_version or VMWare Fusion >= $minimum_vmware_version"
   if [[ -z $virtualbox_version ]]; then
