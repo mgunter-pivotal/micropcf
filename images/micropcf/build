@@ -9,7 +9,7 @@ mkdir -p "$output_dir"
 
 "$micropcf_dir/bosh/setup-packer" "$output_dir/packer-bosh"
 
-releases='cf-rabbitmq diego cf garden-linux etcd cf-redis cf-mysql'
+releases='diego cf garden-linux etcd cf-redis cf-mysql'
 if ! "$micropcf_dir/bosh/retrieve" "$output_dir/assets" $releases; then
   "$micropcf_dir/bosh/build" "$output_dir/assets" $releases
 fi

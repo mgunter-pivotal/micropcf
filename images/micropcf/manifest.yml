@@ -3,9 +3,6 @@
 <<: (( merge ))
 
 releases:
-- name: cf-rabbitmq
-  version: 0
-  url: file:///opt/bosh-provisioner/assets/releases/cf-rabbitmq-0.tgz
 - name: cf-mysql
   version: 0
   url: file:///opt/bosh-provisioner/assets/releases/cf-mysql-0.tgz
@@ -31,11 +28,6 @@ jobs:
   - name: mysql
     release: cf-mysql
 
-  - name: rabbitmq-broker
-    release: cf-rabbitmq
-  - name: rabbitmq-server
-    release: cf-rabbitmq
-
 properties:
   <<: (( merge ))
   network_name: (( networks.[0].name ))
@@ -46,7 +38,6 @@ properties:
     admin_username: admin
     admin_password: admin
     apps_domain: (( app_domains.[0] ))
-    domain: local.micropcf.io
     skip_ssl_validation: true
     nats:
       <<: (( merge ))
@@ -94,7 +85,6 @@ properties:
       bootstrap_endpoint:
         username: admin
         password: admin
-      galera_port: 4568
 
   redis:
     maxmemory: 262144000
@@ -106,29 +96,3 @@ properties:
       service_instance_limit: 3
       nginx:
         port: 19283
-
-  rabbitmq-broker:
-    ip: placeholder-ip
-    cc_endpoint: http://api.local.micropcf.io
-    rabbitmq:
-      hosts: [placeholder-ip]
-      administrator:
-        username: admin
-        password: admin
-      management_domain: local.micropcf.io
-      management_ip: placeholder-ip
-      operator_set_policy:
-        enabled: false
-    service:
-      url: rabbitmq.local.micropcf.io
-      username: admin
-      password: admin
-  rabbitmq-server:
-    static_ips: [placeholder-ip]
-    administrators:
-      broker:
-        username: admin
-        password: admin
-      management:
-        username: admin
-        password: admin
