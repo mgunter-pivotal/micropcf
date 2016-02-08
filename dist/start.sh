@@ -36,6 +36,37 @@ function semver_greater_or_equal {
   fi
 }
 
+vmware_subnets=$(ifconfig | grep  vmnet -A2 | grep 192.168 | awk '{print $2}')
+vbox_subnets=$(ifconfig | grep  vbox -A2 | grep 192.168 | awk '{print $2}')
+
+function subnet_in_set {
+        matching_subnets= `echo $1 | grep $2`
+        echo $matching_subnets | wc -l
+}
+
+function available_ip_for_provider {
+  for i in `seq 1 9`; do
+    third_octal=$(($i * 11))
+    subnet="192.168.${third_octal}.1"
+    if [[ $1 -eq 'vmware_fusion' ]]; then
+      allowed_subnets=$vmware_subnets
+      forbidden_subnet=$vbox_subnets
+    else
+      allowed_subnets=$vbox_subnets
+      forbidden_subnet=$vmware_subnets
+    fi
+    if [[ ! $(subnet_in_set $allowed_subnets $subnet) -eq 0 ]]; then
+      echo "192.168.$third_octal.$third_octal"
+      break
+    elif [[ $(subnet_in_set $forbidden_subnets $subnet) -eq 0 ]]; then
+      continue;
+    else
+      echo "192.168.$third_octal.$third_octal"
+      break
+    fi
+  done
+}
+
 vagrant_version=
 which vagrant > /dev/null
 if [[ $? -eq 0 ]]; then
@@ -61,6 +92,7 @@ fi
 
 if [[ $(semver_greater_or_equal "$vmware_version" "$minimum_vmware_version") -eq 0 ]]; then
   echo "Starting micropcf using VMWare Fusion..."
+  available_ip_for_provider vmware_fusion
   vagrant up --provider=vmware_fusion
 elif [[ $(semver_greater_or_equal "$virtualbox_version" "$minimum_virtualbox_version") -eq 0 ]]; then
   echo "Starting micropcf using Virtualbox..."
