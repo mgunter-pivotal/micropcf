@@ -1,0 +1,89 @@
+#!/bin/bash
+
+set -e
+
+vagrant_dir=$(cd `dirname $0` && pwd)
+
+min_vagrant_version=1.8.0
+min_virtualbox_version=5.0.0
+
+inets=$(ifconfig |grep '\tinet '|awk '{print $2}')
+vbox_inets=$(echo vboxnet{0..99} | xargs -n1 ifconfig 2>/dev/null | grep '\tinet ' | awk '{print $2}')
+
+function semver_greater_or_equal() {
+  [[ -z $1 ]] && return 1
+
+  first_major=$(echo $1 | cut -d '.' -f 1)
+  first_minor=$(echo $1 | cut -d '.' -f 2)
+  first_patch=$(echo $1 | cut -d '.' -f 3)
+
+  second_major=$(echo $2 | cut -d '.' -f 1)
+  second_minor=$(echo $2 | cut -d '.' -f 2)
+  second_patch=$(echo $2 | cut -d '.' -f 3)
+
+  [[ $first_major -gt $second_major ]] && return 0
+  [[ $first_major -lt $second_major ]] && return 1
+  [[ $first_minor -gt $second_minor ]] && return 0
+  [[ $first_minor -lt $second_minor ]] && return 1
+  [[ $first_patch -ge $second_patch ]] && return 0
+
+  return 1
+}
+
+function contains() {
+   echo $1 | grep -q "^${2}$"
+}
+
+function responds() {
+  ping -q -c 1 -t 1 "$1" >/dev/null
+}
+
+function free_ip() {
+  for i in {11..19}; do
+    local inet="192.168.${i}.1"
+    local ip="192.168.${i}.11"
+
+    if ! contains "$inets" "$inet" || (contains "$vbox_inets" "$inet" && responds "$ip"); then
+      echo $ip
+      return 0
+    fi
+  done
+  return 1
+}
+
+function domain_for_ip() {
+  local count=$(($(echo $1 | cut -d '.' -f 3) - 10))
+  if [[ $count = 1 ]]; then
+    count=''
+  fi
+  echo "local${count}.micropcf.io"
+}
+
+function vagrant_version() {
+  if which vagrant >/dev/null 2>&1; then
+    vagrant --version | cut -d ' ' -f 2
+  fi
+}
+
+function virtualbox_version() {
+  if which VBoxManage >/dev/null 2>&1; then
+    VBoxManage --version | grep -o "[0-9]\+\.[0-9]\+\.[0-9]\+"
+  fi
+}
+
+if ! semver_greater_or_equal "$(vagrant_version)" "$min_vagrant_version"; then
+  >&2 echo "Vagrant >= $min_vagrant_version must be installed to use MicroPCF."
+  exit 1
+fi
+
+if ! semver_greater_or_equal "$(virtualbox_version)" "$min_virtualbox_version"; then
+  >&2 echo "Virtualbox >= $min_virtualbox_version must be installed to use MicroPCF."
+  exit 1
+fi
+
+ip=$(free_ip)
+domain=$(domain_for_ip "$ip")
+
+pushd "$vagrant_dir" >/dev/null
+  MICROPCF_IP=$ip MICROPCF_DOMAIN=$domain vagrant up --provider=virtualbox
+popd >/dev/null
