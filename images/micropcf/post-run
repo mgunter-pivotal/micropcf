@@ -4,35 +4,35 @@ set -eu
 
 domain=$1
 
-CF_API_URL="api.$domain"
-CF_ADMIN_USERNAME='admin'
-CF_ADMIN_PASSWORD='admin'
+cf_api_url="api.$domain"
+cf_admin_username='admin'
+cf_admin_password='admin'
 
-BROKER_USERNAME='admin'
-BROKER_PASSWORD='admin'
+broker_username='admin'
+broker_password='admin'
 
 function updateServiceBroker() {
   echo "Service broker already exists - updating broker"
-  cf update-service-broker ${BROKER_NAME} ${BROKER_USERNAME} ${BROKER_PASSWORD} ${BROKER_URL}
+  cf update-service-broker ${broker_name} ${broker_username} ${broker_password} ${broker_url}
 }
 
 function createServiceBroker(){
   echo "Service broker does not exist - creating broker"
-  cf create-service-broker ${BROKER_NAME} ${BROKER_USERNAME} ${BROKER_PASSWORD} ${BROKER_URL}
+  cf create-service-broker ${broker_name} ${broker_username} ${broker_password} ${broker_url}
 }
 
-cf api ${CF_API_URL} --skip-ssl-validation
-cf auth ${CF_ADMIN_USERNAME} ${CF_ADMIN_PASSWORD}
+cf api ${cf_api_url} --skip-ssl-validation
+cf auth ${cf_admin_username} ${cf_admin_password}
 
-BROKER_NAME='p-mysql'
-BROKER_URL="http://mysql.$domain:19284"
-
-createServiceBroker || updateServiceBroker
-cf enable-service-access ${BROKER_NAME}
-
-BROKER_NAME='redis'
-BROKER_SERVICE_NAME='p-redis'
-BROKER_URL="http://redis.$domain:19283"
+broker_name='p-mysql'
+broker_url="http://mysql.$domain"
 
 createServiceBroker || updateServiceBroker
-cf enable-service-access ${BROKER_SERVICE_NAME}
+cf enable-service-access ${broker_name}
+
+broker_name='redis'
+broker_service_name='p-redis'
+broker_url="http://redis-broker.$domain"
+
+createServiceBroker || updateServiceBroker
+cf enable-service-access ${broker_service_name}
