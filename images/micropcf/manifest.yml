@@ -110,6 +110,7 @@ properties:
   rabbitmq-broker:
     ip: placeholder-ip
     cc_endpoint: http://api.local.micropcf.io
+    route: rabbitmq-broker
     rabbitmq:
       hosts: [placeholder-ip]
       administrator:
@@ -120,7 +121,7 @@ properties:
       operator_set_policy:
         enabled: false
     service:
-      url: rabbitmq.local.micropcf.io
+      url: rabbitmq-broker.local.micropcf.io
       username: admin
       password: admin
   rabbitmq-server:
