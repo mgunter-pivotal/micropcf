@@ -40,6 +40,3 @@ cf enable-service-access ${broker_service_name}
 broker_name='rabbitmq'
 broker_service_name='p-rabbitmq'
 broker_url="http://rabbitmq.$domain"
-
-createServiceBroker || updateServiceBroker
-cf enable-service-access ${broker_service_name}
