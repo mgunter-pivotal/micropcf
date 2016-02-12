@@ -57,7 +57,7 @@ properties:
 
   cf_mysql:
     host: placeholder-ip
-    external_host: mysql.local.micropcf.io
+    external_host: mysql-broker.local.micropcf.io
     broker:
       auth_username: admin
       auth_password: admin

@@ -13,7 +13,7 @@ domain=$1
 export CONFIG=`mktemp -t config.XXXXXXXX`
 cat <<EOF >$CONFIG
 {
-  "broker_host": "mysql.$domain:19284",
+  "broker_host": "mysql-broker.$domain",
   "broker_protocol": "http",
   "service_name": "p-mysql",
   "plans": [
@@ -29,7 +29,7 @@ cat <<EOF >$CONFIG
     }
   ],
   "proxy":{
-    "dashboard_urls": ["http://mysql.$domain:19284/v2/catalog"],
+    "dashboard_urls": ["http://mysql-broker.$domain/v2/catalog"],
     "api_username": "admin",
     "api_password": "admin",
     "skip_ssl_validation": true

@@ -25,21 +25,19 @@ cf api ${cf_api_url} --skip-ssl-validation
 cf auth ${cf_admin_username} ${cf_admin_password}
 
 broker_name='p-mysql'
-broker_url="http://mysql.$domain"
+broker_url="http://mysql-broker.$domain"
 
 createServiceBroker || updateServiceBroker
 cf enable-service-access ${broker_name}
 
-broker_name='redis'
-broker_service_name='p-redis'
+broker_name='p-redis'
 broker_url="http://redis-broker.$domain"
 
 createServiceBroker || updateServiceBroker
-cf enable-service-access ${broker_service_name}
+cf enable-service-access ${broker_name}
 
-broker_name='rabbitmq'
-broker_service_name='p-rabbitmq'
+broker_name='p-rabbitmq'
 broker_url="http://rabbitmq-broker.$domain"
 
 createServiceBroker || updateServiceBroker
-cf enable-service-access ${broker_service_name}
+cf enable-service-access ${broker_name}
