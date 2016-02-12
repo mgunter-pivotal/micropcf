@@ -126,6 +126,7 @@ properties:
       password: admin
   rabbitmq-server:
     static_ips: [placeholder-ip]
+    plugins: [rabbitmq_management]
     administrators:
       broker:
         username: admin
