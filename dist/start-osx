@@ -52,7 +52,7 @@ function free_ip() {
 }
 
 function domain_for_ip() {
-  local count=$(($(echo $1 | cut -d '.' -f 3) - 10))
+  local count=$(echo $1 | cut -d '.' -f 3 | tr -s '1-9')
   if [[ $count = 1 ]]; then
     count=''
   fi
