@@ -1,0 +1,34 @@
+#!/bin/bash
+
+set -e
+
+if [[ -z $1 ]]; then
+  echo "Usage:"
+  echo -e "\t$0 domain"
+  exit 1
+fi
+
+domain=$1
+
+export CONFIG_PATH=`mktemp -t config.XXXXXXXX`
+cat <<EOF >$CONFIG_PATH
+{
+  "service_name": "p-rabbitmq",
+  "plan_names": [
+    "standard"
+  ],
+  "api": "api.$domain",
+  "admin_user": "admin",
+  "admin_password": "admin",
+  "apps_domain": "$domain",
+  "skip_ssl_validation": true
+}
+EOF
+
+micropcf_dir=$(cd `dirname $0` && cd .. && pwd)
+
+pushd "$micropcf_dir/test/src/github.com/pivotal-cf/cf-rabbitmq-smoke-tests" >/dev/null
+  GOPATH=$micropcf_dir/test:$PWD/Godeps/_workspace \
+  PATH=$micropcf_dir/test/bin:$PWD/Godeps/_workspace/bin:$PATH \
+  ./bin/test
+popd >/dev/null
