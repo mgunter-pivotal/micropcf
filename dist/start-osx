@@ -31,7 +31,7 @@ function semver_greater_or_equal() {
 }
 
 function contains() {
-   echo $1 | grep -q "^${2}$"
+   echo "$1" | grep -q "^${2}$"
 }
 
 function responds() {
@@ -39,9 +39,9 @@ function responds() {
 }
 
 function free_ip() {
-  for i in {11..19}; do
-    local inet="192.168.${i}.1"
-    local ip="192.168.${i}.11"
+  for i in {1..9}; do
+    local inet="192.168.${i}${i}.1"
+    local ip="192.168.${i}${i}.11"
 
     if ! contains "$inets" "$inet" || (contains "$vbox_inets" "$inet" && responds "$ip"); then
       echo $ip
