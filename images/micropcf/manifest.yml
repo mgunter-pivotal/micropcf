@@ -116,7 +116,7 @@ properties:
       administrator:
         username: admin
         password: admin
-      management_domain: local.micropcf.io
+      management_domain: rabbitmq-management.local.micropcf.io
       management_ip: placeholder-ip
       operator_set_policy:
         enabled: false
