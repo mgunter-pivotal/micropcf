@@ -1,4 +1,4 @@
-## Heading: Connecting to PCF Dev
+## Connecting to PCF Dev
 
 ### Targeting Your MicroPCF Instance
 
