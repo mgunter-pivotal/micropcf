@@ -2,29 +2,29 @@
 
 set -e
 
-micropcf_dir=$(cd `dirname $0` && cd .. && pwd)
+pcfdev_dir=$(cd `dirname $0` && cd .. && pwd)
 
-if ! $micropcf_dir/bin/assets-clean $@; then
+if ! $pcfdev_dir/bin/assets-clean $@; then
   >&2 echo "Asset submodules are dirty."
   exit 1
 fi
 
-signature=$($micropcf_dir/bin/asset-signature $@)
+signature=$($pcfdev_dir/bin/asset-signature $@)
 if [[ -z $signature ]]; then
   >&2 echo "Could not sign assets."
   exit 1
 fi
 
-if aws s3api head-object --bucket micropcf --key asset-cache/${signature}.tar >/dev/null 2>&1; then
+if aws s3api head-object --bucket pcfdev --key asset-cache/${signature}.tar >/dev/null 2>&1; then
   exit 0
 fi
 
-tmp_dir=$(mktemp -dt micropcf-assets.XXXXXXXX)
-$micropcf_dir/bosh/build $tmp_dir/assets $@
+tmp_dir=$(mktemp -dt pcfdev-assets.XXXXXXXX)
+$pcfdev_dir/bosh/build $tmp_dir/assets $@
 
 tar -C $tmp_dir/assets -cf $tmp_dir/assets.tar .
 
-aws s3api put-object --bucket micropcf --key asset-cache/${signature}.tar --body $tmp_dir/assets.tar
+aws s3api put-object --bucket pcfdev --key asset-cache/${signature}.tar --body $tmp_dir/assets.tar
 echo "Versions of the following releases have been cached: $@"
 
 rm -rf $tmp_dir

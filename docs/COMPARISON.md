@@ -1,5 +1,5 @@
 ## PCF Dev Side-By-Side Comparison
-|                                                                           | microPCF                   | PCF                                   | CF            |
+|                                                                           | PCF Dev                    | PCF                                   | CF            |
 | ---                                                                       | ---                        | ---                                   | ---           |
 | Space required                                                            | 15 GB                      | []                                    | []            |
 | Memory required                                                           | 1.5 GB                     | []                                    | []            |

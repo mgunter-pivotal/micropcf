@@ -10,18 +10,18 @@ fi
 
 
 assets_dir=$(mkdir -p "$1" && cd "$1" && pwd)
-micropcf_dir=$(cd `dirname $0` && cd .. && pwd)
+pcfdev_dir=$(cd `dirname $0` && cd .. && pwd)
 releases=${@:2}
 
-if "$micropcf_dir/bin/assets-present" $releases && ! "$micropcf_dir/bin/assets-clean" $releases; then
+if "$pcfdev_dir/bin/assets-present" $releases && ! "$pcfdev_dir/bin/assets-clean" $releases; then
   >&2 echo "Assets are available but dirty."
   exit 1
 fi
 
-signature=$("$micropcf_dir/bin/asset-signature" $releases)
+signature=$("$pcfdev_dir/bin/asset-signature" $releases)
 if [[ -z $signature ]]; then
   >&2 echo "Assets not available in cache."
   exit 1
 fi
 
-aws s3api get-object --bucket micropcf --key "asset-cache/${signature}.tar" >(tar -C "$assets_dir" -x)
+aws s3api get-object --bucket pcfdev --key "asset-cache/${signature}.tar" >(tar -C "$assets_dir" -x)

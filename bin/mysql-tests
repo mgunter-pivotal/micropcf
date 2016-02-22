@@ -42,10 +42,10 @@ cat <<EOF >$CONFIG
 }
 EOF
 
-micropcf_dir=$(cd `dirname $0` && cd .. && pwd)
+pcfdev_dir=$(cd `dirname $0` && cd .. && pwd)
 
-pushd "$micropcf_dir/test/src/github.com/mdelillo/cf-mysql-acceptance-tests" >/dev/null
-  GOPATH=$micropcf_dir/test:$PWD/Godeps/_workspace \
-  PATH=$micropcf_dir/test/bin:$PWD/Godeps/_workspace/bin:$PATH \
+pushd "$pcfdev_dir/test/src/github.com/mdelillo/cf-mysql-acceptance-tests" >/dev/null
+  GOPATH=$pcfdev_dir/test:$PWD/Godeps/_workspace \
+  PATH=$pcfdev_dir/test/bin:$PWD/Godeps/_workspace/bin:$PATH \
   ./bin/test-acceptance -nodes 1
 popd >/dev/null

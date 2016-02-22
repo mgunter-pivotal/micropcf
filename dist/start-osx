@@ -72,12 +72,12 @@ function virtualbox_version() {
 }
 
 if ! semver_greater_or_equal "$(vagrant_version)" "$min_vagrant_version"; then
-  >&2 echo "Vagrant >= $min_vagrant_version must be installed to use MicroPCF."
+  >&2 echo "Vagrant >= $min_vagrant_version must be installed to use PCF Dev."
   exit 1
 fi
 
 if ! semver_greater_or_equal "$(virtualbox_version)" "$min_virtualbox_version"; then
-  >&2 echo "Virtualbox >= $min_virtualbox_version must be installed to use MicroPCF."
+  >&2 echo "Virtualbox >= $min_virtualbox_version must be installed to use PCF Dev."
   exit 1
 fi
 
@@ -85,5 +85,5 @@ ip=$(free_ip)
 domain=$(domain_for_ip "$ip")
 
 pushd "$vagrant_dir" >/dev/null
-  MICROPCF_IP=$ip MICROPCF_DOMAIN=$domain vagrant up --provider=virtualbox
+  PCFDEV_IP=$ip PCFDEV_DOMAIN=$domain vagrant up --provider=virtualbox
 popd >/dev/null

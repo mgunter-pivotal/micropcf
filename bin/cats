@@ -28,10 +28,10 @@ cat <<EOF >$CONFIG
 }
 EOF
 
-micropcf_dir=$(cd `dirname $0` && cd .. && pwd)
+pcfdev_dir=$(cd `dirname $0` && cd .. && pwd)
 
-pushd "$micropcf_dir/test/src/github.com/cloudfoundry/cf-acceptance-tests" >/dev/null
-  GOPATH=$micropcf_dir/test ./bin/test \
+pushd "$pcfdev_dir/test/src/github.com/cloudfoundry/cf-acceptance-tests" >/dev/null
+  GOPATH=$pcfdev_dir/test ./bin/test \
     --skip='scp|sftp|NO_DIEGO_SUPPORT|insufficient resources|SSO Lifecycle' \
     --slowSpecThreshold=480 \
     ${@:2} \

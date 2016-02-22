@@ -5,7 +5,7 @@ set -e
 function dependencies_for_package {
   package=$1
   release=$2
-  dependencies=$(cat $micropcf_dir/releases/$release-release/packages/$package/spec | $micropcf_dir/bin/yaml-to-json | jq '.dependencies[]?' | tr -d '"' | sort)
+  dependencies=$(cat $pcfdev_dir/releases/$release-release/packages/$package/spec | $pcfdev_dir/bin/yaml-to-json | jq '.dependencies[]?' | tr -d '"' | sort)
 
   if [[ -n $dependencies ]]; then
     for dependency in ${dependencies[@]}; do 
@@ -21,9 +21,9 @@ function remove_temp_dir {
 }
 trap remove_temp_dir EXIT
 
-micropcf_dir=$(cd `dirname $0` && cd .. && pwd)
-merged_manifest=$(spiff merge $micropcf_dir/images/micropcf/manifest.yml $micropcf_dir/images/manifest.yml)
-json_manifest=$(echo "$merged_manifest" | $micropcf_dir/bin/yaml-to-json)
+pcfdev_dir=$(cd `dirname $0` && cd .. && pwd)
+merged_manifest=$(spiff merge $pcfdev_dir/images/pcfdev/manifest.yml $pcfdev_dir/images/manifest.yml)
+json_manifest=$(echo "$merged_manifest" | $pcfdev_dir/bin/yaml-to-json)
 releases=$(echo "$json_manifest" | jq '.releases[].name' | tr -d '"' | sort)
 packages=()
 
@@ -32,7 +32,7 @@ pushd $temp_dir > /dev/null
     release_packages=()
     jobs=$(echo "$json_manifest" | jq ".jobs[0].templates[] | select(.release == \"$release\").name" | tr -d '"')
     for job in $jobs; do
-      job_packages=$(cat $micropcf_dir/releases/$release-release/jobs/$job/spec | $micropcf_dir/bin/yaml-to-json | jq '.packages[]?' | tr -d '"' | sort)
+      job_packages=$(cat $pcfdev_dir/releases/$release-release/jobs/$job/spec | $pcfdev_dir/bin/yaml-to-json | jq '.packages[]?' | tr -d '"' | sort)
       packages+=($job_packages)
       release_packages+=($job_packages)
     done

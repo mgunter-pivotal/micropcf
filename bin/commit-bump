@@ -1,6 +1,6 @@
 #!/bin/bash
 
-micropcf_dir=$(cd `dirname $0` && cd .. && pwd)
+pcfdev_dir=$(cd `dirname $0` && cd .. && pwd)
 
 function submodule_log() {
   echo -n "bump "
@@ -21,6 +21,6 @@ function submodule_log() {
   git submodule status | awk '{print $2}' | xargs git diff --cached --submodule
 }
 
-pushd $micropcf_dir >/dev/null
+pushd $pcfdev_dir >/dev/null
   submodule_log | git duet-commit --file -
 popd >/dev/null
